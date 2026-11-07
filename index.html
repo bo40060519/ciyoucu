@@ -813,7 +813,7 @@ VIEWS.owner = function () {
         }).join('');
   } else {
     body = '<div class="listcard"><div class="lb" style="margin:0 0 10px">修改团长账号 / 密码</div>'
-      + '<div class="field"><label class="lb">新账号（QQ 号，不改就留空）</label><input id="newAcc" inputmode="numeric" placeholder="' + esc(String((state.settings||{}).owner_qq || '201005194006')) + '"></div>'
+      + '<div class="field"><label class="lb">新账号（QQ 号，不改就留空）</label><input id="newAcc" inputmode="numeric" placeholder="留空表示不修改"></div>'
       + '<div class="field"><label class="lb">新密码（不改就留空）</label><input id="newPwd" placeholder="至少 6 位"></div>'
       + '<div class="err" id="err"></div>'
       + '<button class="btn" data-act="saveOwnerInfo">保存</button></div>'
@@ -1003,8 +1003,9 @@ async function handle(act, el2) {
       if (!acc) { fail('请输入团长账号'); return; }
       if (!pwd) { fail('请输入密码'); return; }
       const s = await store.getSettings();
-      const realQq = String(s.owner_qq || '201005194006');
-      const realPwd = String(s.owner_pwd || 'bo05194006');
+      const realQq = String(s.owner_qq || '');
+      const realPwd = String(s.owner_pwd || '');
+      if (!realQq || !realPwd) { fail('团长账号还没设置好，请联系管理员'); return; }
       if (acc !== realQq) { fail('团长账号不对'); return; }
       if (pwd !== realPwd) { fail('密码不对'); return; }
       state.actor = { role:'owner', name:'团长' };
