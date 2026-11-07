@@ -163,6 +163,26 @@ pre.sql{background:#2C2440;color:#E9E2FA;font-size:11.5px;line-height:1.65;paddi
   .mark,body::before,body::after{animation:none}
   .grid.enter .card{animation:none}
 }
+
+/* ---- 追加动效 ---- */
+@keyframes pagein{from{opacity:.55;transform:translateY(8px) scale(.995)}to{opacity:1;transform:none}}
+#app.pagein{animation:pagein .34s cubic-bezier(.2,.8,.3,1) both}
+.btn{position:relative;overflow:hidden}
+.btn::after{content:"";position:absolute;top:0;left:-60%;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.42),transparent);transform:skewX(-18deg);animation:shine 3.8s ease-in-out infinite}
+@keyframes shine{0%,70%{left:-60%}100%{left:135%}}
+.btn.ghost::after{display:none}
+.progtrack i{background-image:linear-gradient(90deg,#B79BF0,#8A66D8,#35BFA0,#B79BF0);background-size:220% 100%;animation:flow 2.6s linear infinite}
+@keyframes flow{from{background-position:0 0}to{background-position:220% 0}}
+.mascot{position:absolute;right:8px;top:2px;width:78px;height:78px;pointer-events:none;animation:bob 3.6s ease-in-out infinite}
+.mascot svg{width:100%;height:100%}
+.icn{transition:transform .22s cubic-bezier(.2,.8,.3,1)}
+.card:hover .icn{transform:rotate(-6deg) scale(1.07)}
+.h2::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--plum-2);margin-right:7px;vertical-align:middle}
+.tag.m{animation:pop .45s cubic-bezier(.2,.8,.3,1) both}
+@media (prefers-reduced-motion:reduce){
+  #app.pagein{animation:none}
+  .btn::after,.progtrack i,.mascot{animation:none}
+}
 </style>
 </head>
 <body>
@@ -435,6 +455,18 @@ const BANK_SEED = [
 
 const TYPE_NAME = { single:'单选', judge:'判断', fill:'填空', short:'简答' };
 
+const MASCOT = '<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+  + '<ellipse cx="40" cy="72" rx="20" ry="4" fill="#E6DCF7" opacity=".8"/>'
+  + '<ellipse cx="40" cy="43" rx="25" ry="23" fill="url(#g1)"/>'
+  + '<circle cx="30" cy="41" r="3.2" fill="#372B4B"/><circle cx="50" cy="41" r="3.2" fill="#372B4B"/>'
+  + '<circle cx="31" cy="42.2" r="1" fill="#fff"/><circle cx="51" cy="42.2" r="1" fill="#fff"/>'
+  + '<ellipse cx="24" cy="49" rx="4.4" ry="2.8" fill="#FFA9C4" opacity=".85"/>'
+  + '<ellipse cx="56" cy="49" rx="4.4" ry="2.8" fill="#FFA9C4" opacity=".85"/>'
+  + '<path d="M36 50q4 4.5 8 0" stroke="#372B4B" stroke-width="2" fill="none" stroke-linecap="round"/>'
+  + '<path d="M63 20l2.6 5.4 5.4 2.6-5.4 2.6L63 36l-2.6-5.4L55 28l5.4-2.6z" fill="#FFD98E"/>'
+  + '<defs><linearGradient id="g1" x1="18" y1="20" x2="62" y2="68"><stop offset="0" stop-color="#D9C6FF"/><stop offset="1" stop-color="#9E78E8"/></linearGradient></defs>'
+  + '</svg>';
+
 
 /* ================= 状态与工具 ================= */
 const state = {
@@ -459,8 +491,15 @@ function el(id) { return document.getElementById(id); }
 function val(id) { const e = el(id); return e ? e.value.trim() : ''; }
 function showErr(t) { const e = el('err'); if (e) e.textContent = t || ''; }
 function render() {
-  document.getElementById('app').innerHTML = (VIEWS[state.view] || VIEWS.home)();
+  const root = document.getElementById('app');
+  root.innerHTML = (VIEWS[state.view] || VIEWS.home)();
   window.scrollTo(0, 0);
+  if (state._shown !== state.view) {
+    state._shown = state.view;
+    root.classList.remove('pagein');
+    void root.offsetWidth;
+    root.classList.add('pagein');
+  }
   if (state.view === 'exam') updateProg();
   if (state.view === 'result' && state.result && state.result.passed) confetti();
 }
@@ -532,7 +571,7 @@ VIEWS.home = function () {
     { act:'loginAssistant', cls:'p', ic:ICON.ucheck, t:'小助理后台', d:'发起考核 · 查看本组记录' }
   ];
   return brandRow()
-    + '<div class="hero"><h1>Ciyoucu 考核体系</h1><p>新人培训 · 跳培晋级 · 全团成绩，一眼看全 ✨</p></div>'
+    + '<div class="hero"><div class="mascot">' + MASCOT + '</div><h1>Ciyoucu 考核体系</h1><p>新人培训 · 跳培晋级 · 全团成绩，一眼看全 ✨</p></div>'
     + '<div class="grid enter">' + cards.map(c =>
         '<div class="card" data-act="' + c.act + '"' + (c.type ? (' data-type="' + c.type + '"') : '') + '>'
         + '<div class="icn ' + c.cls + '">' + c.ic + '</div>'
@@ -579,7 +618,13 @@ function loginCard(title, sub, fieldLabel, inputId, ph, actBtn, btnText) {
 }
 
 VIEWS.loginOwner = function () {
-  return loginCard('团长后台', '输入团长密码进入，初始密码 123456，进去后可以改。', '团长密码', 'pwdInput', '请输入密码', 'doOwnerLogin', '进入后台');
+  return brandRow() + backBar('返回首页', 'home')
+    + '<h1 style="font-size:22px;margin:0 0 6px">团长后台</h1>'
+    + '<p style="color:var(--muted);font-size:13px;margin:0 0 18px">用团长账号 + 密码进入，账号和密码都能在后台里改。</p>'
+    + '<div class="field"><label class="lb">团长账号（QQ 号）</label><input id="ownerAcc" inputmode="numeric" placeholder="输入团长账号"></div>'
+    + '<div class="field"><label class="lb">团长密码</label><input id="pwdInput" type="password" placeholder="输入密码"></div>'
+    + '<div class="err" id="err"></div>'
+    + '<button class="btn" data-act="doOwnerLogin">进入后台</button>';
 };
 VIEWS.loginLeader = function () {
   return loginCard('组长后台', '直接输入团长给你录入的 QQ 号，不需要密码。', '组长 QQ 号', 'qqInput', '输入 QQ 号', 'doLeaderLogin', '进入后台');
@@ -767,10 +812,11 @@ VIEWS.owner = function () {
             + '<button class="mini" style="border-color:#F0C9D1;color:var(--rose)" data-act="qDel" data-id="' + q.id + '">删除</button></div></div>';
         }).join('');
   } else {
-    body = '<div class="listcard"><div class="lb" style="margin:0 0 10px">修改团长密码</div>'
-      + '<div class="field"><label class="lb">新密码</label><input id="newPwd" placeholder="输入新密码"></div>'
+    body = '<div class="listcard"><div class="lb" style="margin:0 0 10px">修改团长账号 / 密码</div>'
+      + '<div class="field"><label class="lb">新账号（QQ 号，不改就留空）</label><input id="newAcc" inputmode="numeric" placeholder="' + esc(String((state.settings||{}).owner_qq || '201005194006')) + '"></div>'
+      + '<div class="field"><label class="lb">新密码（不改就留空）</label><input id="newPwd" placeholder="至少 6 位"></div>'
       + '<div class="err" id="err"></div>'
-      + '<button class="btn" data-act="savePwd">保存新密码</button></div>'
+      + '<button class="btn" data-act="saveOwnerInfo">保存</button></div>'
       + '<div class="listcard"><div class="lname">当前状态</div>'
       + '<div class="lmeta">' + (isShared() ? '<span class="dot"></span>已同步 · 多台手机数据互通' : '本机模式：数据只存在这台手机上') + '</div>'
       + '<button class="btn ghost" data-act="setup" style="margin-top:12px">同步设置</button>'
@@ -953,11 +999,14 @@ async function handle(act, el2) {
 
     /* --- 登录 --- */
     case 'doOwnerLogin': {
-      const pwd = val('pwdInput');
+      const acc = val('ownerAcc'), pwd = val('pwdInput');
+      if (!acc) { fail('请输入团长账号'); return; }
       if (!pwd) { fail('请输入密码'); return; }
       const s = await store.getSettings();
-      const real = s.owner_pwd || '123456';
-      if (pwd !== String(real)) { fail('密码不对'); return; }
+      const realQq = String(s.owner_qq || '201005194006');
+      const realPwd = String(s.owner_pwd || 'bo05194006');
+      if (acc !== realQq) { fail('团长账号不对'); return; }
+      if (pwd !== realPwd) { fail('密码不对'); return; }
       state.actor = { role:'owner', name:'团长' };
       state.view = 'owner'; state.tab = 'leaders';
       await loadTab(); render(); return;
@@ -1149,6 +1198,18 @@ async function handle(act, el2) {
       if (!p || p.length < 4) { fail('密码至少 4 位'); return; }
       try { await store.setSetting('owner_pwd', p); } catch (e) { fail(e.message); return; }
       fail(''); window.alert('团长密码已更新'); render(); return;
+    }
+    case 'saveOwnerInfo': {
+      const acc = val('newAcc'), pwd = val('newPwd');
+      if (!acc && !pwd) { fail('账号或密码填一个'); return; }
+      if (acc && !/^[0-9]{6,12}$/.test(acc)) { fail('账号只能填 6~12 位数字 QQ 号'); return; }
+      if (pwd && pwd.length < 6) { fail('密码至少 6 位'); return; }
+      try {
+        if (acc) await store.setSetting('owner_qq', acc);
+        if (pwd) await store.setSetting('owner_pwd', pwd);
+        state.settings = await store.getSettings();
+      } catch (e) { fail(e.message); return; }
+      fail(''); window.alert('已保存，下次登录用新的账号密码'); render(); return;
     }
     case 'filterExam': {
       state.filterLeader = el('flSel') ? el('flSel').value : '';
