@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ciyoucu 考核体系</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%236E4FD1'/%3E%3Cpath d='M20.5 11.2a6.2 6.2 0 1 0 0 9.6' fill='none' stroke='%23fff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#FDF8F4; --surface:#fff; --ink:#332B45; --muted:#7D7492; --line:#F0E7DC;
+  --plum:#8A66D8; --plum-2:#B79BF0; --plum-soft:#F2EBFF;
+  --mint:#35BFA0; --mint-soft:#E3F8F2;
+  --rose:#F0719B; --rose-soft:#FFE9F0;
+  --amber:#EFA24C; --amber-soft:#FFF1DE;
+  --shadow:0 2px 6px rgba(70,48,96,.05), 0 14px 30px -18px rgba(70,48,96,.42);
+  --r:20px;
+}
+html,body{margin:0;padding:0}
+body{
+  color:var(--ink);font-size:15px;line-height:1.6;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  background:
+    radial-gradient(820px 420px at 6% -6%, #FFEFF5 0%, rgba(255,239,245,0) 62%),
+    radial-gradient(760px 420px at 104% 2%, #E8F8F4 0%, rgba(232,248,244,0) 60%),
+    radial-gradient(900px 520px at 50% 108%, #F3EEFF 0%, rgba(243,238,255,0) 65%),
+    var(--bg);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+}
+body::before,body::after{content:"";position:fixed;border-radius:50%;pointer-events:none;z-index:-1}
+body::before{width:160px;height:160px;left:-46px;top:20%;background:radial-gradient(circle at 35% 35%,#FFD7E6,rgba(255,215,230,0) 72%);animation:float 9s ease-in-out infinite}
+body::after{width:200px;height:200px;right:-64px;top:56%;background:radial-gradient(circle at 60% 40%,#CFEDE4,rgba(207,237,228,0) 72%);animation:float 12s ease-in-out infinite reverse}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-22px) scale(1.06)}}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-4px) rotate(-3deg)}}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pop{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+@keyframes fall{0%{transform:translateY(-10px) rotate(0);opacity:1}100%{transform:translateY(96vh) rotate(540deg);opacity:.9}}
+#app{max-width:560px;margin:0 auto;padding:18px 16px 44px;min-height:100vh}
+.brandrow{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.mark{width:42px;height:42px;border-radius:15px;background:linear-gradient(145deg,var(--plum),#B99BF2);display:grid;place-items:center;flex:none;color:#fff;box-shadow:0 10px 20px -10px rgba(138,102,216,.95);animation:bob 3.4s ease-in-out infinite}
+.brandtxt{font-weight:800;letter-spacing:.01em;font-size:15.5px}
+.brandsub{font-size:11.5px;color:var(--muted);margin-top:1px}
+.chip{margin-left:auto;font-size:11px;padding:6px 11px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.85);color:var(--muted);cursor:pointer;backdrop-filter:blur(6px);transition:transform .18s ease}
+.chip:active{transform:scale(.94)}
+.chip.ok{color:#1E8A72;border-color:#CFEDE3;background:linear-gradient(135deg,#E6FAF4,#F3FFFB)}
+.hero{position:relative;margin:2px 0 20px;padding:20px 18px 18px;border-radius:24px;overflow:hidden;
+  background:linear-gradient(150deg,#FFFFFF 0%,#FBF6FF 55%,#F2FFF9 100%);
+  border:1px solid #F3E9F7;box-shadow:var(--shadow)}
+.hero::after{content:"";position:absolute;right:-28px;top:-34px;width:118px;height:118px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#E7DCFF,rgba(231,220,255,0) 70%)}
+.hero h1{font-size:26px;line-height:1.25;margin:0 0 8px;letter-spacing:-.015em;font-weight:800}
+.hero p{margin:0;color:var(--muted);font-size:13.5px}
+.grid{display:grid;gap:11px}
+.grid.enter .card{animation:rise .42s cubic-bezier(.2,.7,.3,1) both}
+.grid.enter .card:nth-child(2){animation-delay:.05s}
+.grid.enter .card:nth-child(3){animation-delay:.1s}
+.grid.enter .card:nth-child(4){animation-delay:.15s}
+.grid.enter .card:nth-child(5){animation-delay:.2s}
+.card{
+  display:flex;align-items:center;gap:13px;background:rgba(255,255,255,.92);border:1px solid var(--line);
+  border-radius:var(--r);padding:15px 15px;box-shadow:var(--shadow);cursor:pointer;
+  transition:transform .18s cubic-bezier(.2,.8,.3,1), box-shadow .18s ease, border-color .18s ease;
+}
+.card:hover{transform:translateY(-2px);box-shadow:0 18px 32px -20px rgba(70,48,96,.6);border-color:#EADCF6}
+.card:active{transform:scale(.97)}
+.icn{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;flex:none}
+.icn svg{width:22px;height:22px}
+.icn.p{background:linear-gradient(135deg,#F2EBFF,#E3D6FF);color:var(--plum)}
+.icn.m{background:linear-gradient(135deg,#E3F8F2,#CFF3E9);color:#20A183}
+.icn.a{background:linear-gradient(135deg,#FFF1DE,#FFE4C4);color:#CE8A32}
+.icn.r{background:linear-gradient(135deg,#FFE9F0,#FFD7E4);color:#D9537E}
+.card .tt{font-weight:750;font-size:15.5px}
+.card .ds{font-size:12.5px;color:var(--muted);margin-top:2px}
+.chev{margin-left:auto;color:#C9C0DC;flex:none;transition:transform .18s ease}
+.card:hover .chev{transform:translateX(2px);color:var(--plum)}
+.h2{font-size:13px;font-weight:800;color:var(--muted);letter-spacing:.06em;margin:24px 0 10px}
+.field{margin-bottom:13px}
+.lb{font-size:12.5px;color:var(--muted);margin-bottom:6px;display:block;font-weight:600}
+input,textarea,select{
+  width:100%;font-size:16px;font-family:inherit;color:var(--ink);background:#fff;
+  border:1.5px solid var(--line);border-radius:15px;padding:12px 14px;outline:none;
+  transition:border-color .18s ease, box-shadow .18s ease;
+}
+input:focus,textarea:focus,select:focus{border-color:var(--plum);box-shadow:0 0 0 4px rgba(138,102,216,.13)}
+textarea{min-height:110px;resize:vertical;line-height:1.55}
+.btn{
+  display:block;width:100%;border:0;border-radius:16px;padding:14px 16px;font-size:15.5px;font-weight:750;
+  font-family:inherit;color:#fff;cursor:pointer;margin-top:6px;letter-spacing:.01em;
+  background:linear-gradient(135deg,#9270E4,#7A55D2);
+  box-shadow:0 12px 22px -14px rgba(122,85,210,.95);
+  transition:transform .16s cubic-bezier(.2,.8,.3,1), box-shadow .16s ease, filter .16s ease;
+}
+.btn:hover{filter:brightness(1.04);box-shadow:0 16px 26px -14px rgba(122,85,210,.9)}
+.btn:active{transform:scale(.975)}
+.btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line);box-shadow:none}
+.btn.ghost:hover{border-color:#E4D8F2}
+.btn.mint{background:linear-gradient(135deg,#42CBA8,#25AE8E);box-shadow:0 12px 22px -14px rgba(37,174,142,.95)}
+.btn.rose{background:linear-gradient(135deg,#FF85AC,#E85C89);box-shadow:0 12px 22px -14px rgba(232,92,137,.95)}
+.btn.sm{padding:10px 14px;font-size:13px;width:auto;border-radius:13px;margin:0}
+.btn:disabled{opacity:.45}
+.row{display:flex;gap:9px;align-items:center}
+.row.wrap{flex-wrap:wrap}
+.note{background:rgba(255,255,255,.88);border:1.5px dashed #EADFF5;border-radius:16px;padding:13px 14px;font-size:12.5px;color:var(--muted);line-height:1.7}
+.note b{color:var(--ink)}
+.err{color:#DE4D77;font-size:13px;margin-top:9px;min-height:18px}
+.tag{display:inline-block;font-size:11px;padding:4px 9px;border-radius:9px;background:var(--plum-soft);color:var(--plum);font-weight:750}
+.tag.m{background:var(--mint-soft);color:#1E8A72}
+.tag.r{background:var(--rose-soft);color:#D9537E}
+.tag.a{background:var(--amber-soft);color:#C57F26}
+.seg{display:flex;gap:5px;background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:16px;padding:5px;overflow:auto}
+.seg button{
+  flex:1;min-width:max-content;border:0;background:transparent;font-family:inherit;font-size:13.5px;
+  padding:10px 12px;border-radius:12px;color:var(--muted);cursor:pointer;font-weight:700;
+  transition:all .18s ease;
+}
+.seg button.on{background:#fff;color:var(--plum);box-shadow:0 6px 14px -8px rgba(70,48,96,.5)}
+.listcard{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:18px;padding:13px 15px;margin-bottom:10px;box-shadow:0 2px 10px -8px rgba(70,48,96,.4)}
+.lrow{display:flex;align-items:center;gap:10px}
+.lname{font-weight:750;font-size:14.5px}
+.lmeta{font-size:12px;color:var(--muted);margin-top:2px}
+.qa{margin-left:auto;display:flex;gap:7px;flex:none}
+.mini{font-size:11.5px;border:1.5px solid var(--line);background:#fff;color:var(--muted);border-radius:11px;padding:7px 11px;cursor:pointer;font-family:inherit;font-weight:700;transition:all .16s ease}
+.mini:active{transform:scale(.94)}
+.mini.on{border-color:var(--rose);color:#D9537E;background:var(--rose-soft)}
+.mini.ok{border-color:var(--mint);color:#1E8A72;background:var(--mint-soft)}
+.qcard{background:#fff;border:1px solid var(--line);border-radius:22px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.qhead{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.qnum{font-size:12px;font-weight:800;color:#fff;background:linear-gradient(135deg,#A98AF0,#8A66D8);padding:3px 10px;border-radius:999px}
+.qstem{font-size:15.5px;line-height:1.65;margin:0 0 12px;font-weight:600}
+.opt{position:relative;display:flex;gap:10px;align-items:flex-start;border:1.5px solid var(--line);background:#FCFAF8;border-radius:15px;padding:12px 13px;margin-bottom:8px;cursor:pointer;font-size:14.5px;transition:all .16s cubic-bezier(.2,.8,.3,1)}
+.opt:active{transform:scale(.985)}
+.opt.on{border-color:var(--plum);background:linear-gradient(135deg,#F6F1FF,#EFE6FF);box-shadow:0 8px 18px -14px rgba(138,102,216,.9)}
+.opt.on::after{content:"✓";position:absolute;right:12px;top:50%;transform:translateY(-50%);font-weight:800;color:var(--plum);font-size:14px}
+.opt .k{font-weight:800;color:var(--muted);flex:none}
+.opt.on .k{color:var(--plum)}
+.ansbox{background:var(--mint-soft);border:1px solid #CDE9DF;border-radius:15px;padding:11px 13px;font-size:13.5px;color:#12624F;line-height:1.65}
+.userbox{background:#FCFAF8;border:1px solid var(--line);border-radius:15px;padding:11px 13px;font-size:13.5px;line-height:1.65;white-space:pre-wrap}
+.kv{font-size:11.5px;color:var(--muted);margin-bottom:5px;letter-spacing:.04em;font-weight:700}
+.table{width:100%;border-collapse:collapse;table-layout:fixed;background:#fff;border-radius:16px;overflow:hidden;font-size:13px}
+.table th,.table td{padding:10px 8px;text-align:left;border-bottom:1px solid var(--line);word-break:break-all}
+.table th{font-size:11.5px;color:var(--muted);font-weight:700;background:#FCF9F6}
+.table td:last-child,.table th:last-child{text-align:right}
+.big{font-size:36px;font-weight:850;letter-spacing:-.02em;margin:0;animation:pop .5s cubic-bezier(.2,.8,.3,1) both}
+.footer{margin-top:30px;text-align:center;font-size:11.5px;color:#A9A0BC}
+.bar{position:sticky;bottom:0;background:linear-gradient(to top,rgba(253,248,244,.96) 62%,rgba(253,248,244,0));padding:14px 0 4px;margin-top:8px}
+pre.sql{background:#2C2440;color:#E9E2FA;font-size:11.5px;line-height:1.65;padding:14px;border-radius:16px;overflow:auto;max-height:260px;font-family:ui-monospace,Menlo,Consolas,monospace}
+.back{display:inline-flex;align-items:center;gap:5px;font-size:13px;color:var(--muted);cursor:pointer;margin-bottom:14px;background:none;border:0;padding:0;font-family:inherit;font-weight:600}
+.back:active{opacity:.7}
+.hr{height:1px;background:var(--line);margin:18px 0}
+.center{text-align:center}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--mint);display:inline-block;vertical-align:middle;margin-right:5px;box-shadow:0 0 0 3px rgba(53,191,160,.16)}
+.prog{position:sticky;top:0;z-index:5;margin:-4px 0 14px;padding:10px 14px;border-radius:16px;background:rgba(255,255,255,.92);border:1px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(8px)}
+.progtrack{height:8px;border-radius:99px;background:#F0EAF8;overflow:hidden}
+.progtrack i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#B79BF0,#8A66D8,#35BFA0);transition:width .3s cubic-bezier(.2,.8,.3,1)}
+.progtxt{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-bottom:6px;font-weight:700}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:99}
+.confetti i{position:absolute;top:-16px;width:9px;height:14px;border-radius:3px;animation:fall 2.4s linear forwards}
+@media (min-width:700px){
+  #app{padding-top:34px}
+  .hero h1{font-size:30px}
+}
+@media (prefers-reduced-motion:reduce){
+  .mark,body::before,body::after{animation:none}
+  .grid.enter .card{animation:none}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ================= 配置 ================= */
+const CFG_KEY = 'ciyoucu_cfg_v3';
+const ROOM_ID = 'main';
+const CREATE_SQL = 'create table if not exists room (id text primary key, doc jsonb, updated_at timestamptz default now());';
+const DEFAULT_URL = 'https://mtsghonyvdaripocdhbj.supabase.co';
+const DEFAULT_KEY = 'sb_publishable_0sCNLUlLMHa8N-LcQtyz_w_hIUfPK0a';
+const cfg = { mode:'cloud', url:DEFAULT_URL, key:DEFAULT_KEY };
+try {
+  const s = JSON.parse(localStorage.getItem(CFG_KEY) || '{}');
+  if (s && typeof s.url === 'string') {
+    cfg.url = s.url; cfg.key = s.key || '';
+    cfg.mode = (cfg.url && cfg.key) ? 'cloud' : 'local';
+  }
+} catch (e) {}
+function saveCfg(url, key) {
+  cfg.url = (url || '').trim().replace(/\/+$/, '');
+  cfg.key = (key || '').trim();
+  cfg.mode = (cfg.url && cfg.key) ? 'cloud' : 'local';
+  localStorage.setItem(CFG_KEY, JSON.stringify({ url: cfg.url, key: cfg.key }));
+}
+function useLocal() {
+  cfg.mode = 'local'; cfg.url = ''; cfg.key = '';
+  localStorage.setItem(CFG_KEY, JSON.stringify({ url:'', key:'' }));
+}
+const isShared = () => cfg.mode === 'cloud' && !!cfg.url && !!cfg.key;
+
+function lsGet(k, d) { try { const v = localStorage.getItem('cx_' + k); return v ? JSON.parse(v) : d; } catch(e) { return d; } }
+function lsSet(k, v) { localStorage.setItem('cx_' + k, JSON.stringify(v)); }
+
+/* ================= 云端接口 ================= */
+async function sb(path, opts) {
+  opts = opts || {};
+  const headers = Object.assign({
+    'apikey': cfg.key,
+    'Authorization': 'Bearer ' + cfg.key,
+    'Content-Type': 'application/json'
+  }, opts.headers || {});
+  const res = await fetch(cfg.url + '/rest/v1/' + path, Object.assign({}, opts, { headers }));
+  if (!res.ok) {
+    let t = '';
+    try { t = await res.text(); } catch(e) {}
+    throw new Error('云端返回 ' + res.status + (t ? ('：' + t.slice(0, 140)) : ''));
+  }
+  const txt = await res.text();
+  return txt ? JSON.parse(txt) : null;
+}
+
+/* ================= 数据文档 ================= */
+function blankDoc() {
+  return { leaders:[], assistants:[], exams:[], questions:[], settings:{}, seq:{ leader:1, assistant:1, question:1, exam:1 } };
+}
+function normDoc(d) {
+  if (!d || typeof d !== 'object') d = blankDoc();
+  ['leaders','assistants','exams','questions'].forEach(function (k) { if (!Array.isArray(d[k])) d[k] = []; });
+  if (!d.settings || typeof d.settings !== 'object') d.settings = {};
+  if (!d.seq || typeof d.seq !== 'object') d.seq = { leader:1, assistant:1, question:1, exam:1 };
+  ['leader','assistant','question','exam'].forEach(function (k) { if (!d.seq[k]) d.seq[k] = 1; });
+  return d;
+}
+function readLocalDoc() { try { return normDoc(JSON.parse(localStorage.getItem('cx_doc') || 'null')); } catch(e) { return blankDoc(); } }
+function writeLocalDoc(d) { localStorage.setItem('cx_doc', JSON.stringify(d)); }
+
+async function readCloudDoc() {
+  const rows = await sb('room?select=doc&id=eq.' + ROOM_ID);
+  if (rows && rows[0] && rows[0].doc) return normDoc(rows[0].doc);
+  return blankDoc();
+}
+async function writeCloudDoc(d) {
+  await sb('room', {
+    method:'POST',
+    headers:{ 'Prefer':'resolution=merge-duplicates' },
+    body: JSON.stringify([{ id: ROOM_ID, doc: d }])
+  });
+}
+async function loadDoc() { return isShared() ? await readCloudDoc() : readLocalDoc(); }
+async function saveDoc(d) { if (isShared()) await writeCloudDoc(d); else writeLocalDoc(d); }
+
+let chain = Promise.resolve();
+function serial(fn) {
+  const p = chain.then(fn, fn);
+  chain = p.catch(function () {});
+  return p;
+}
+function seedDoc(d) {
+  if (d.questions && d.questions.length) return false;
+  BANK_SEED.forEach(function (q, i) { d.questions.push(Object.assign({}, q, { id: i + 1 })); });
+  d.seq.question = BANK_SEED.length + 1;
+  return true;
+}
+async function tx(fn) {
+  return serial(async function () {
+    const d = await loadDoc();
+    seedDoc(d);
+    const res = await fn(d);
+    if (!(res && res.skip)) await saveDoc(d);
+    if (res && typeof res === 'object' && Object.prototype.hasOwnProperty.call(res, 'value')) return res.value;
+    return res;
+  });
+}
+async function ro(fn) {
+  return serial(async function () {
+    const d = await loadDoc();
+    seedDoc(d);
+    return fn(d);
+  });
+}
+
+/* ================= 数据访问层 ================= */
+const store = {
+  async getSettings() { return await ro(function (d) { return d.settings; }); },
+  async setSetting(k, v) { return tx(function (d) { d.settings[k] = String(v); }); },
+
+  async listLeaders() {
+    return await ro(function (d) { return d.leaders.slice().sort(function (a, b) { return Number(a.id) - Number(b.id); }); });
+  },
+  async addLeader(name, qq) {
+    return tx(function (d) {
+      if (d.leaders.some(function (x) { return String(x.qq) === String(qq); })) throw new Error('这个 QQ 号已经录入过了');
+      const item = { id: d.seq.leader++, name: name, qq: String(qq), created_at: new Date().toISOString() };
+      d.leaders.push(item);
+      return { value: item };
+    });
+  },
+  async delLeader(id) {
+    return tx(function (d) {
+      const n = Number(id);
+      d.leaders = d.leaders.filter(function (x) { return Number(x.id) !== n; });
+      d.assistants = d.assistants.filter(function (x) { return Number(x.leader_id) !== n; });
+    });
+  },
+
+  async listAssistants(leaderId) {
+    return await ro(function (d) {
+      return leaderId ? d.assistants.filter(function (x) { return Number(x.leader_id) === Number(leaderId); }) : d.assistants.slice();
+    });
+  },
+  async addAssistant(leaderId, leaderName, name, qq) {
+    return tx(function (d) {
+      if (d.assistants.some(function (x) { return String(x.qq) === String(qq); })) throw new Error('这个 QQ 号已经录入过了');
+      const item = { id: d.seq.assistant++, leader_id: Number(leaderId), leader_name: leaderName, name: name, qq: String(qq), created_at: new Date().toISOString() };
+      d.assistants.push(item);
+      return { value: item };
+    });
+  },
+  async delAssistant(id) {
+    return tx(function (d) {
+      const n = Number(id);
+      d.assistants = d.assistants.filter(function (x) { return Number(x.id) !== n; });
+    });
+  },
+
+  async listQuestions(bank) {
+    return await ro(function (d) {
+      return d.questions.filter(function (q) { return q.bank === bank; }).sort(function (a, b) { return Number(a.sort) - Number(b.sort); });
+    });
+  },
+  async addQuestion(q) {
+    return tx(function (d) {
+      const item = Object.assign({}, q, { id: d.seq.question++ });
+      d.questions.push(item);
+      return { value: item };
+    });
+  },
+  async updateQuestion(id, patch) {
+    return tx(function (d) {
+      const it = d.questions.find(function (x) { return Number(x.id) === Number(id); });
+      if (it) Object.assign(it, patch);
+    });
+  },
+  async delQuestion(id) {
+    return tx(function (d) {
+      const n = Number(id);
+      d.questions = d.questions.filter(function (x) { return Number(x.id) !== n; });
+    });
+  },
+
+  async listExams(leaderId) {
+    return await ro(function (d) {
+      const list = d.exams.slice().reverse();
+      return leaderId ? list.filter(function (x) { return Number(x.leader_id) === Number(leaderId); }) : list;
+    });
+  },
+  async addExam(rec) {
+    return tx(function (d) {
+      const item = Object.assign({}, rec, { id: d.seq.exam++, uid: 'x' + Date.now() + Math.random().toString(36).slice(2, 7), created_at: new Date().toISOString() });
+      d.exams.push(item);
+      return { value: item };
+    });
+  },
+  async importExams(list) {
+    return tx(function (d) {
+      let n = 0;
+      list.forEach(function (r) {
+        if (!r || !r.uid) return;
+        if (d.exams.some(function (e) { return e.uid === r.uid; })) return;
+        d.exams.push(r); n++;
+      });
+      return { value: n };
+    });
+  },
+
+  async initSeed() {
+    const d = await loadDoc();
+    if (seedDoc(d)) await saveDoc(d);
+  }
+};
+
+/* ================= 正式题库 ================= */
+const BANK_NAME = { A:'甲套（第一套）', B:'乙套（第二套）', C:'丙套（第三套）', J:'跳培总题库' };
+const BANK_SEED = [
+  /* ---- 甲套 7 题 ---- */
+  { bank:'A', sort:1, qtype:'single', stem:'试音群无法进入，正确做法是？', options:['在接单群直接发问','添加派单好友，询问该单子是否还有名额','直接放弃接单','在群内吐槽'], answer:'B', blanks:0 },
+  { bank:'A', sort:2, qtype:'judge', stem:'老板问单子价格，我如实告诉老板报价，不算违规。', options:[], answer:'错', blanks:0 },
+  { bank:'A', sort:3, qtype:'fill', stem:'进入试音群两种途径：____、____。', options:[], answer:'扫码进入、点群号进入', blanks:2 },
+  { bank:'A', sort:4, qtype:'fill', stem:'接单标注“8半”含义：____。', options:[], answer:'八元半小时', blanks:1 },
+  { bank:'A', sort:5, qtype:'short', stem:'请写出团内6种不给陪陪结账的情况。', options:[], answer:'①技术单输掉且评分倒数第一、第二名；②谎报自身实力；③出现炸单行为；④接单混单、水单；⑤被老板给出差评；⑥不尊重派单、态度恶劣挑事。', blanks:0 },
+  { bank:'A', sort:6, qtype:'short', stem:'老板赠送礼物、钱款结算规则是什么？', options:[], answer:'不可变现礼物（皮肤等）自行收下，需告知派单；钱款赠送：第一次全额归派单，第二次及以后派单3成、陪陪7成。', blanks:0 },
+  { bank:'A', sort:7, qtype:'short', stem:'区分炸单和混单，并各举一例。', options:[], answer:'炸单：被老板选中后拒单、中途退单、同时接多单无法履约。例：被老板选中后临时说接不了单。\n混单：麦质模糊、不听老板安排、敷衍接单。例：全程麦有杂音，自顾自玩不配合老板。', blanks:0 },
+
+  /* ---- 乙套 10 题 ---- */
+  { bank:'B', sort:1, qtype:'single', stem:'下列哪一项属于抢老板的违规行为？', options:['在试音群正常发送试音','私加、私聊老板','打完订单提交截图','服从派单安排'], answer:'B', blanks:0 },
+  { bank:'B', sort:2, qtype:'single', stem:'单子标注数字7代表什么？', options:['老板已经选好人，单子结束','老板没有选到合适陪陪，放弃该单子','新的单子上架','单子加价'], answer:'B', blanks:0 },
+  { bank:'B', sort:3, qtype:'judge', stem:'微冒充指冒充派单提供的资料进行接单。', options:[], answer:'对', blanks:0 },
+  { bank:'B', sort:4, qtype:'judge', stem:'接单群里面可以随意打卡、听歌、闲聊。', options:[], answer:'错', blanks:0 },
+  { bank:'B', sort:5, qtype:'fill', stem:'双条指____和____，日常接单一般只用语音条。', options:[], answer:'语音条、文字条', blanks:2 },
+  { bank:'B', sort:6, qtype:'fill', stem:'卡女的含义是：老板只需要____性陪陪接单。', options:[], answer:'女', blanks:1 },
+  { bank:'B', sort:7, qtype:'fill', stem:'语聊哄睡单结束后，需要提交挂电话前____分钟内的时长截图才算有效。', options:[], answer:'两', blanks:1 },
+  { bank:'B', sort:8, qtype:'short', stem:'遇到别人借钱、换号、提出二次收费，应该怎么处理？', options:[], answer:'无论对方是谁，必须直接举报；团内普通小额罚款5元以内，禁止一切私下二次收费，不举报后果自负。', blanks:0 },
+  { bank:'B', sort:9, qtype:'short', stem:'自退人员和被清理人员在入团权限上有什么区别？打完单子要对老板好友做什么操作？', options:[], answer:'自退人员可以二次入团；被清理人员不可二次入团，且必须删除相关好友。所有陪陪打完单子必须删除老板好友。', blanks:0 },
+  { bank:'B', sort:10, qtype:'short', stem:'游戏单选人前和结束后，技术单、娱乐单分别要提交什么材料？', options:[], answer:'选人前：技术单发战绩、主页；娱乐单只需试音。\n结束后：娱乐单发组队截图+收款码；技术单发战绩截图+收款码。', blanks:0 },
+
+  /* ---- 丙套 5 题 ---- */
+  { bank:'C', sort:1, qtype:'single', stem:'单子标记 8/3 代表什么？', options:['3元8局','8元3局','8元半小时','3元8分钟'], answer:'B', blanks:0 },
+  { bank:'C', sort:2, qtype:'judge', stem:'非派单人员不可以在接单群随意发数字1、7或者发布单子。', options:[], answer:'对', blanks:0 },
+  { bank:'C', sort:3, qtype:'short', stem:'什么是卡设备和微冒充？分别解释说明。', options:[], answer:'卡设备：指使用iPad、电脑设备进行接单。\n微冒充：指冒充派单提供的个人资料进行接单，属于违规行为。', blanks:0 },
+  { bank:'C', sort:4, qtype:'short', stem:'接单群里面禁止哪些行为？至少写出4项。', options:[], answer:'禁止互加好友、禁止拍一拍、禁止打卡、禁止听歌、禁止乱发消息、禁止随意艾特他人、禁止非派单发1/7和单子（任选4项即可）', blanks:0 },
+  { bank:'C', sort:5, qtype:'short', stem:'试音群里数字1和数字7分别代表什么含义？', options:[], answer:'数字1：老板已经选完人，单子结束，全员退出试音群。\n数字7：老板未选到合适陪陪、主动放弃单子，全员退出试音群。', blanks:0 },
+
+  /* ---- 跳培总题库 24 题 ---- */
+  { bank:'J', sort:1, qtype:'single', stem:'通过考核后找谁拉进接单群？', options:['随便群内老人','组长','派单'], answer:'B', blanks:0 },
+  { bank:'J', sort:2, qtype:'fill', stem:'试音双条指的是语音条和____。', options:[], answer:'文字条', blanks:1 },
+  { bank:'J', sort:3, qtype:'judge', stem:'单子标记数字1代表老板已经选好人，单子结束。', options:[], answer:'对', blanks:0 },
+  { bank:'J', sort:4, qtype:'single', stem:'标识“8半”是什么意思？', options:['八块钱半小时','八元半场','半价八元'], answer:'A', blanks:0 },
+  { bank:'J', sort:5, qtype:'fill', stem:'试音语音条时长要求：____秒。', options:[], answer:'5–10', blanks:1 },
+  { bank:'J', sort:6, qtype:'judge', stem:'试音群在老板选人结束前可以随意早退。', options:[], answer:'错', blanks:0 },
+  { bank:'J', sort:7, qtype:'single', stem:'进不去试音群的正确做法？', options:['在接单群直接提问','添加派单好友询问','直接不管'], answer:'B', blanks:0 },
+  { bank:'J', sort:8, qtype:'fill', stem:'接单群内不可以私自给____报单子价格。', options:[], answer:'老板', blanks:1 },
+  { bank:'J', sort:9, qtype:'judge', stem:'打完单子之后需要删除老板好友。', options:[], answer:'对', blanks:0 },
+  { bank:'J', sort:10, qtype:'single', stem:'“卡女”的含义是？', options:['单子只要女生','卡住平板设备','老板指定老陪陪'], answer:'A', blanks:0 },
+  { bank:'J', sort:11, qtype:'fill', stem:'单子数字标记7代表老板没有选到合适的人，____。', options:[], answer:'放弃单子', blanks:1 },
+  { bank:'J', sort:12, qtype:'single', stem:'技术单子选人之前需要发送什么？', options:['战绩、主页','收款码','时长截图'], answer:'A', blanks:0 },
+  { bank:'J', sort:13, qtype:'judge', stem:'老板第一次送的礼物钱款，全部归派单。', options:[], answer:'对', blanks:0 },
+  { bank:'J', sort:14, qtype:'short', stem:'游戏娱乐单子打完之后，需要上交什么？', options:[], answer:'组队截图、收款码', blanks:0 },
+  { bank:'J', sort:15, qtype:'single', stem:'下面哪一项属于炸单？', options:['被选中之后拒接单子','按时试音','上交截图'], answer:'A', blanks:0 },
+  { bank:'J', sort:16, qtype:'fill', stem:'遇到借钱、换号、二次收费，必须立刻____。', options:[], answer:'举报', blanks:1 },
+  { bank:'J', sort:17, qtype:'judge', stem:'对派单态度差、阴阳怪气，单子做完一样结账。', options:[], answer:'错', blanks:0 },
+  { bank:'J', sort:18, qtype:'short', stem:'试音群里面禁止的行为写出任意两项。', options:[], answer:'早退、不改名不试音（也可填卖惨、闲聊，任选两项即可）', blanks:0 },
+  { bank:'J', sort:19, qtype:'judge', stem:'挂电话前任意时间截图，都算作哄睡单子有效时长截图。', options:[], answer:'错', blanks:0 },
+  { bank:'J', sort:20, qtype:'fill', stem:'老板第二次赠送的单子收益分成：派单拿3成，接单拿____成。', options:[], answer:'7', blanks:1 },
+  { bank:'J', sort:21, qtype:'short', stem:'写出任意两种不会给陪陪结账的情况。', options:[], answer:'技术单输且评分倒数一二、谎报实力（炸单/混单/差评/不尊重派单，任选两个）', blanks:0 },
+  { bank:'J', sort:22, qtype:'single', stem:'“微冒充”指的是？', options:['使用平板接单','冒充派单给的资料接单','不开麦试音'], answer:'B', blanks:0 },
+  { bank:'J', sort:23, qtype:'fill', stem:'属于抢老板违规行为：私加老板、____。', options:[], answer:'私聊老板', blanks:1 },
+  { bank:'J', sort:24, qtype:'short', stem:'区分清理人员和自退人员的入团规则。', options:[], answer:'被清理人员不可二次入团，清理人员必须删掉好友，不删同样会被清理；自退人员可以二次入团', blanks:0 }
+];
+
+const TYPE_NAME = { single:'单选', judge:'判断', fill:'填空', short:'简答' };
+
+
+/* ================= 状态与工具 ================= */
+const state = {
+  view:'home', tab:'leaders', actor:null,
+  leaders:[], assistants:[], exams:[], questions:[], qbank:'A',
+  exam:null, result:null, editing:null, pendingType:null, msg:''
+};
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function enc(str) { return btoa(unescape(encodeURIComponent(str))); }
+function dec(str) { return decodeURIComponent(escape(atob(str))); }
+function fmtTime(t) {
+  if (!t) return '';
+  const d = new Date(t);
+  if (isNaN(d.getTime())) return String(t);
+  const p = n => (n < 10 ? '0' : '') + n;
+  return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+}
+function el(id) { return document.getElementById(id); }
+function val(id) { const e = el(id); return e ? e.value.trim() : ''; }
+function showErr(t) { const e = el('err'); if (e) e.textContent = t || ''; }
+function render() {
+  document.getElementById('app').innerHTML = (VIEWS[state.view] || VIEWS.home)();
+  window.scrollTo(0, 0);
+  if (state.view === 'exam') updateProg();
+  if (state.view === 'result' && state.result && state.result.passed) confetti();
+}
+
+function answeredCount(ex) {
+  return ex.questions.filter(function (q, i) {
+    const a = ex.answers[i];
+    if (q.qtype === 'fill') return Array.isArray(a) && a.some(function (x) { return String(x == null ? '' : x).trim(); });
+    return String(a == null ? '' : a).trim().length > 0;
+  }).length;
+}
+function updateProg() {
+  const ex = state.exam; if (!ex) return;
+  const bar = document.getElementById('progBar'), txt = document.getElementById('progTxt');
+  if (!bar || !txt) return;
+  const n = answeredCount(ex), t = ex.questions.length || 1;
+  bar.style.width = Math.round(n / t * 100) + '%';
+  txt.textContent = '已答 ' + n + ' / ' + ex.questions.length;
+}
+function confetti() {
+  try {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const d = document.createElement('div');
+    d.className = 'confetti'; d.setAttribute('aria-hidden', 'true');
+    const cols = ['#8A66D8', '#F0719B', '#35BFA0', '#EFA24C', '#B79BF0'];
+    for (let i = 0; i < 30; i++) {
+      const sp = document.createElement('i');
+      sp.style.left = (Math.random() * 100).toFixed(1) + '%';
+      sp.style.background = cols[i % cols.length];
+      sp.style.animationDelay = (Math.random() * 0.9).toFixed(2) + 's';
+      sp.style.animationDuration = (1.9 + Math.random() * 1.1).toFixed(2) + 's';
+      d.appendChild(sp);
+    }
+    document.body.appendChild(d);
+    setTimeout(function () { if (d.parentNode) d.parentNode.removeChild(d); }, 3600);
+  } catch (e) {}
+}
+
+const ICON = {
+  cap:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 12 4l9.5 4.5L12 13 2.5 8.5Z"/><path d="M6 10.5V15c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-4.5"/></svg>',
+  bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4.5 13.5H11l-1 8.5 8.5-11.5H12l1-8.5Z"/></svg>',
+  crown:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5 6.5 17h11L21 7.5l-4.5 2.5L12 5.5 7.5 10 3 7.5Z"/></svg>',
+  users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c0-3 2.5-4.8 5.5-4.8s5.5 1.8 5.5 4.8"/><path d="M16 5.6a3.2 3.2 0 0 1 0 5.6M17.5 14.6c2 .7 3.2 2.2 3.2 4.4"/></svg>',
+  ucheck:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9.5" cy="8" r="3.2"/><path d="M3.5 19c0-3 2.6-4.8 6-4.8 1.4 0 2.6.3 3.6.9"/><path d="M15 16.5l2.2 2.2L21 15"/></svg>',
+  chevron:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px"><path d="m9 6 6 6-6 6"/></svg>',
+  back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><path d="m15 6-6 6 6 6"/></svg>',
+  sync:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M20 11a8 8 0 0 0-13.7-5.6M4 5v5h5M4 13a8 8 0 0 0 13.7 5.6M20 19v-5h-5"/></svg>'
+};
+
+function brandRow() {
+  const chip = isShared()
+    ? '<div class="chip ok" data-act="setup">' + ICON.sync + ' 已共享</div>'
+    : '<div class="chip" data-act="setup">本机模式</div>';
+  return '<div class="brandrow"><div class="mark">' + ICON.crown + '</div><div><div class="brandtxt">Ciyoucu 考核体系</div><div class="brandsub">陪玩团考核与成绩管理</div></div>' + chip + '</div>';
+}
+function backBar(label, act, extra) {
+  return '<button class="back" data-act="' + act + '"' + (extra ? (' ' + extra) : '') + '>' + ICON.back + ' ' + label + '</button>';
+}
+
+/* ================= 视图 ================= */
+const VIEWS = {};
+
+VIEWS.home = function () {
+  const cards = [
+    { act:'examEntry', type:'newbie', cls:'p', ic:ICON.cap, t:'新人培训考核', d:'甲乙丙三套整卷随机抽一套' },
+    { act:'examEntry', type:'jump', cls:'a', ic:ICON.bolt, t:'跳培考核', d:'24 题总库随机抽 6~8 道' },
+    { act:'loginOwner', cls:'r', ic:ICON.crown, t:'团长后台', d:'组长管理 · 全团成绩 · 题库' },
+    { act:'loginLeader', cls:'m', ic:ICON.users, t:'组长后台', d:'小助理与本组成绩' },
+    { act:'loginAssistant', cls:'p', ic:ICON.ucheck, t:'小助理后台', d:'发起考核 · 查看本组记录' }
+  ];
+  return brandRow()
+    + '<div class="hero"><h1>Ciyoucu 考核体系</h1><p>新人培训 · 跳培晋级 · 全团成绩，一眼看全 ✨</p></div>'
+    + '<div class="grid enter">' + cards.map(c =>
+        '<div class="card" data-act="' + c.act + '"' + (c.type ? (' data-type="' + c.type + '"') : '') + '>'
+        + '<div class="icn ' + c.cls + '">' + c.ic + '</div>'
+        + '<div><div class="tt">' + c.t + '</div><div class="ds">' + c.d + '</div></div>'
+        + '<div class="chev">' + ICON.chevron + '</div></div>'
+      ).join('') + '</div>'
+    + '<div class="hr"></div>'
+    + '<div class="note">判定规则：本次<b>答错 2 道及以内算通过</b>，答错 3 道及以上不合格。答案只对组长、小助理显示，组员答题过程中看不到。</div>'
+    + '<div class="note" style="margin-top:9px">多台手机要互通：点右上角「' + (isShared() ? '已同步' : '本机模式') + '」接一个免费云库（2 分钟）；不想注册也行，用成绩码把成绩转发给组长。</div>'
+    + '<div class="footer">Ciyoucu · 考核体系 v1.0</div>';
+};
+
+VIEWS.setup = function () {
+  const shared = isShared();
+  return brandRow()
+    + backBar('返回首页', 'home')
+    + '<h1 style="font-size:22px;margin:0 0 6px">让多台手机同步</h1>'
+    + '<p style="color:var(--muted);font-size:13px;margin:0 0 16px">接一个免费的 Supabase 云库，团长、组长、小助理用不同手机打开就看到同一份成绩。不接也能用，但成绩只存各自手机。</p>'
+    + '<div class="listcard"><div class="lname">当前状态</div>'
+    + '<div class="lmeta">' + (shared ? '<span class="dot"></span>已同步 · 多台手机数据互通' : '本机模式 · 成绩只存在这台手机上') + '</div></div>'
+    + '<div class="listcard"><div class="lb" style="margin:0 0 8px">第 1 步 · 注册（2 分钟）</div>'
+    + '<div class="note">手机浏览器打开 <b>supabase.com</b> → Sign up，用 QQ 邮箱注册 → 点 New project，区域选 Singapore → 等两三分钟建好。</div></div>'
+    + '<div class="listcard"><div class="lb" style="margin:0 0 8px">第 2 步 · 建一张表</div>'
+    + '<div class="note" style="margin-bottom:9px">左边点 <b>SQL Editor</b> → New query，把下面这行粘进去点 <b>Run</b>。</div>'
+    + '<pre class="sql">' + esc(CREATE_SQL) + '</pre>'
+    + '<button class="btn ghost" data-act="copySql" style="margin-top:9px">复制这句 SQL</button></div>'
+    + '<div class="listcard"><div class="lb" style="margin:0 0 10px">第 3 步 · 填两个值</div>'
+    + '<div class="note" style="margin-bottom:10px">左下角 <b>Project Settings</b> → <b>API</b>，复制 Project URL 和 anon public 那串 key（别用 service_role）。</div>'
+    + '<div class="field"><label class="lb">Project URL</label><input id="cfgUrl" placeholder="https://xxxx.supabase.co" value="' + esc(cfg.url) + '"></div>'
+    + '<div class="field"><label class="lb">anon public key</label><input id="cfgKey" placeholder="eyJhbGciOi..." value="' + esc(cfg.key) + '"></div>'
+    + '<div class="err" id="err"></div>'
+    + '<button class="btn" data-act="saveCfg">保存并测试</button>'
+    + '<button class="btn ghost" data-act="useLocal" style="margin-top:8px">改回本机模式</button></div>'
+    + '<div class="note">填完把这两串发给霸霸，让霸霸写进文件里，其他人打开就自动同步，不用每人再填一遍。</div>';
+};
+
+function loginCard(title, sub, fieldLabel, inputId, ph, actBtn, btnText) {
+  return brandRow() + backBar('返回首页', 'home')
+    + '<h1 style="font-size:22px;margin:0 0 6px">' + title + '</h1>'
+    + '<p style="color:var(--muted);font-size:13px;margin:0 0 18px">' + sub + '</p>'
+    + '<div class="field"><label class="lb">' + fieldLabel + '</label><input id="' + inputId + '" inputmode="numeric" placeholder="' + ph + '"></div>'
+    + '<div class="err" id="err"></div>'
+    + '<button class="btn" data-act="' + actBtn + '">' + btnText + '</button>';
+}
+
+VIEWS.loginOwner = function () {
+  return loginCard('团长后台', '输入团长密码进入，初始密码 123456，进去后可以改。', '团长密码', 'pwdInput', '请输入密码', 'doOwnerLogin', '进入后台');
+};
+VIEWS.loginLeader = function () {
+  return loginCard('组长后台', '直接输入团长给你录入的 QQ 号，不需要密码。', '组长 QQ 号', 'qqInput', '输入 QQ 号', 'doLeaderLogin', '进入后台');
+};
+VIEWS.loginAssistant = function () {
+  return loginCard('小助理后台', '直接输入组长给你录入的 QQ 号，不需要密码。', '小助理 QQ 号', 'qqInput', '输入 QQ 号', 'doAssistLogin', '进入后台');
+};
+
+VIEWS.verify = function () {
+  const t = state.pendingType === 'jump' ? '跳培考核' : '新人培训考核';
+  return brandRow() + backBar('返回首页', 'home')
+    + '<h1 style="font-size:22px;margin:0 0 6px">' + t + '</h1>'
+    + '<p style="color:var(--muted);font-size:13px;margin:0 0 18px">先确认操作人身份（组长或小助理），答案只对你们显示。</p>'
+    + '<div class="field"><label class="lb">操作人 QQ 号</label><input id="qqInput" inputmode="numeric" placeholder="组长 / 小助理的 QQ 号"></div>'
+    + '<div class="err" id="err"></div>'
+    + '<button class="btn" data-act="doVerify">下一步</button>';
+};
+
+VIEWS.examPrep = function () {
+  const t = state.examType === 'jump' ? '跳培考核' : '新人培训考核';
+  const a = state.actor || {};
+  return brandRow() + backBar('返回首页', 'home')
+    + '<h1 style="font-size:22px;margin:0 0 6px">' + t + '</h1>'
+    + '<p style="color:var(--muted);font-size:13px;margin:0 0 18px">操作人：' + esc(a.leaderName || '') + ' · ' + esc(a.name || '') + '（' + (a.role === 'leader' ? '组长' : '小助理') + '）</p>'
+    + '<div class="field"><label class="lb">组员姓名</label><input id="mName" placeholder="参加考核的组员名字"></div>'
+    + '<div class="field"><label class="lb">组员 QQ 号</label><input id="mQq" inputmode="numeric" placeholder="组员 QQ 号"></div>'
+    + '<div class="err" id="err"></div>'
+    + '<button class="btn" data-act="startExam">出卷，开始考核</button>'
+    + '<div class="note" style="margin-top:14px">' + (state.examType === 'jump' ? '从 24 道跳培题里随机抽 6~8 道，题号从 1 重新排。' : '从甲乙丙三套里随机抽一整套，整套全做。') + '答案不会出现在答题页。</div>';
+};
+
+function qBody(q, i, answers, reading) {
+  let h = '';
+  if (q.qtype === 'single') {
+    (q.options || []).forEach((o, k) => {
+      const key = String.fromCharCode(65 + k);
+      const on = answers[i] === key ? ' on' : '';
+      h += '<div class="opt' + on + '" ' + (reading ? '' : ('data-act="pick" data-i="' + i + '" data-k="' + key + '"')) + '><span class="k">' + key + '</span><span>' + esc(o) + '</span></div>';
+    });
+  } else if (q.qtype === 'judge') {
+    ['对','错'].forEach(k => {
+      const on = answers[i] === k ? ' on' : '';
+      h += '<div class="opt' + on + '" ' + (reading ? '' : ('data-act="pick" data-i="' + i + '" data-k="' + k + '"')) + '><span class="k">' + k + '</span></div>';
+    });
+  } else if (q.qtype === 'fill') {
+    const n = Math.max(1, Number(q.blanks) || 1);
+    const cur = Array.isArray(answers[i]) ? answers[i] : [];
+    h += '<div class="row wrap">';
+    for (let j = 0; j < n; j++) {
+      h += '<input style="flex:1;min-width:120px;margin-bottom:8px" ' + (reading ? 'disabled value="' + esc(cur[j] || '') + '"' : ('data-ans-i="' + i + '" data-ans-j="' + j + '" value="' + esc(cur[j] || '') + '" placeholder="第' + (j+1) + '空"')) + '>';
+    }
+    h += '</div>';
+  } else {
+    h += '<textarea' + (reading ? ' disabled' : ' data-ans-i="' + i + '"') + ' placeholder="写答案">' + esc(answers[i] || '') + '</textarea>';
+  }
+  return h;
+}
+
+VIEWS.exam = function () {
+  const ex = state.exam; if (!ex) return VIEWS.home();
+  return brandRow()
+    + '<div class="row" style="margin-bottom:14px"><span class="tag">' + esc(ex.paper) + '</span><span class="tag m">' + ex.questions.length + ' 题</span><span class="lmeta" style="margin:0">组员：' + esc(ex.memberName) + '（' + esc(ex.memberQq) + '）</span></div>'
+    + '<h1 style="font-size:21px;margin:0 0 14px">' + (ex.type === 'jump' ? '跳培考核' : '新人培训考核') + '</h1>'
+    + '<div class="prog"><div class="progtxt"><span>答题进度</span><span id="progTxt">已答 0 / ' + ex.questions.length + '</span></div><div class="progtrack"><i id="progBar"></i></div></div>'
+    + ex.questions.map((q, i) =>
+        '<div class="qcard"><div class="qhead"><span class="qnum">第 ' + (i+1) + ' 题</span><span class="tag ' + (q.qtype === 'short' ? 'a' : '') + '">' + TYPE_NAME[q.qtype] + '</span></div>'
+        + '<div class="qstem">' + esc(q.stem) + '</div>' + qBody(q, i, ex.answers, false) + '</div>'
+      ).join('')
+    + '<div class="err" id="err"></div>'
+    + '<div class="bar"><button class="btn mint" data-act="submitExam">提交，进入批改</button></div>';
+};
+
+VIEWS.grade = function () {
+  const ex = state.exam; if (!ex) return VIEWS.home();
+  const done = ex.judged.filter(v => v !== null && v !== undefined).length;
+  return brandRow()
+    + '<h1 style="font-size:21px;margin:0 0 6px">批改</h1>'
+    + '<p style="color:var(--muted);font-size:13px;margin:0 0 14px">对照标准答案逐题点“对 / 错”。已判 ' + done + ' / ' + ex.questions.length + ' 题。</p>'
+    + ex.questions.map((q, i) => {
+        const j = ex.judged[i];
+        const mem = fmtAnswer(q, ex.answers[i]);
+        return '<div class="qcard"><div class="qhead"><span class="qnum">第 ' + (i+1) + ' 题</span><span class="tag ' + (q.qtype === 'short' ? 'a' : '') + '">' + TYPE_NAME[q.qtype] + '</span></div>'
+          + '<div class="qstem">' + esc(q.stem) + '</div>'
+          + '<div class="kv">组员作答</div><div class="userbox">' + (mem ? esc(mem) : '<span style="color:#A29CB3">（未作答）</span>') + '</div>'
+          + '<div class="kv" style="margin-top:10px">标准答案</div><div class="ansbox">' + esc(q.answer) + '</div>'
+          + '<div class="qa" style="justify-content:flex-end;margin-top:11px">'
+          + '<button class="mini ' + (j === true ? 'ok' : '') + '" data-act="judge" data-i="' + i + '" data-v="1">答对</button>'
+          + '<button class="mini ' + (j === false ? 'on' : '') + '" data-act="judge" data-i="' + i + '" data-v="0">答错</button>'
+          + '</div></div>';
+      }).join('')
+    + '<div class="err" id="err"></div>'
+    + '<div class="bar"><button class="btn mint" data-act="submitGrade">保存成绩</button></div>';
+};
+
+function fmtAnswer(q, a) {
+  if (a == null) return '';
+  if (Array.isArray(a)) return a.filter(x => x && x.trim()).join(' ／ ');
+  return String(a);
+}
+
+VIEWS.result = function () {
+  const r = state.result; if (!r) return VIEWS.home();
+  const ok = r.passed;
+  return brandRow()
+    + '<div class="center" style="padding:16px 0 6px"><span class="tag ' + (ok ? 'm' : 'r') + '">' + (ok ? '考核通过 🎉' : '还差一点点') + '</span>'
+    + '<p class="big" style="margin:14px 0 4px;color:' + (ok ? 'var(--mint)' : 'var(--rose)') + '">' + r.wrong + ' <span style="font-size:15px;color:var(--muted)">道错</span></p>'
+    + '<p style="color:var(--muted);font-size:13px;margin:0">共 ' + r.total + ' 题 · 组长 ' + esc(r.leader_name) + ' · 组员 ' + esc(r.member_name) + '（' + esc(r.member_qq) + '）</p></div>'
+    + '<div class="listcard"><div class="lmeta">操作人：' + esc(r.grader) + ' · ' + fmtTime(r.created_at) + '</div></div>'
+    + r.detail.map((d, i) =>
+        '<div class="listcard"><div class="qhead"><span class="qnum">第 ' + (i+1) + ' 题</span><span class="tag ' + (d.ok ? 'm' : 'r') + '">' + (d.ok ? '答对' : '答错') + '</span></div>'
+        + '<div style="font-size:14px;line-height:1.6;margin-bottom:8px">' + esc(d.stem) + '</div>'
+        + '<div class="kv">组员作答</div><div class="userbox">' + (d.member ? esc(d.member) : '<span style="color:#A29CB3">（未作答）</span>') + '</div>'
+        + '<div class="kv" style="margin-top:9px">标准答案</div><div class="ansbox">' + esc(d.answer) + '</div></div>'
+      ).join('')
+    + '<button class="btn" data-act="backHome">回到首页</button>';
+};
+
+/* ---- 成绩码（不联网也能传成绩） ---- */
+VIEWS.share = function () {
+  const isExp = state.shareMode === 'export';
+  if (isExp) {
+    return brandRow() + backBar('返回首页', 'home')
+      + '<h1 style="font-size:22px;margin:0 0 6px">把这串发给组长</h1>'
+      + '<p style="color:var(--muted);font-size:13px;margin:0 0 14px">对方在「导入成绩码」里粘贴，就能看到这些成绩。</p>'
+      + '<textarea readonly style="min-height:170px;font-size:11.5px;line-height:1.5">' + esc(state.shareData || '没有可导出的成绩') + '</textarea>'
+      + '<button class="btn" data-act="copyShare">复制成绩码</button>'
+      + '<div class="note" style="margin-top:12px">成绩码可以直接发 QQ、发群，里面就是本组的考核记录。</div>';
+  }
+  return brandRow() + backBar('返回首页', 'home')
+    + '<h1 style="font-size:22px;margin:0 0 6px">导入成绩码</h1>'
+    + '<p style="color:var(--muted);font-size:13px;margin:0 0 14px">把组长/小助理发来的那串粘进来，导入后就能在自己后台看到。</p>'
+    + '<textarea id="importBox" placeholder="粘贴成绩码" style="min-height:170px;font-size:11.5px"></textarea>'
+    + '<div class="err" id="err"></div>'
+    + '<button class="btn" data-act="doImport">导入</button>';
+};
+
+/* ---- 团长后台 ---- */
+VIEWS.owner = function () {
+  const tabs = [['leaders','组长管理'],['exams','全团成绩'],['bank','题库管理'],['settings','设置']];
+  let body = '';
+  if (state.tab === 'leaders') {
+    body = '<div class="listcard"><div class="lb" style="margin:0 0 10px">录入新组长</div>'
+      + '<div class="row" style="gap:8px"><input id="nlName" placeholder="组长名字" style="flex:1"><input id="nlQq" inputmode="numeric" placeholder="组长 QQ" style="flex:1"></div>'
+      + '<div class="err" id="err"></div>'
+      + '<button class="btn" data-act="addLeader" style="margin-top:11px">录入组长</button></div>'
+      + (state.leaders.length ? state.leaders.map(l =>
+          '<div class="listcard"><div class="lrow"><div><div class="lname">' + esc(l.name) + '</div><div class="lmeta">QQ ' + esc(l.qq) + ' · ' + (state.assistants.filter(a => Number(a.leader_id) === Number(l.id)).length) + ' 个小助理</div></div>'
+          + '<div class="qa"><button class="mini" style="border-color:#F0C9D1;color:var(--rose)" data-act="delLeader" data-id="' + l.id + '">删除</button></div></div></div>'
+        ).join('') : '<div class="note">还没有录入组长。组长要先在这里录入，才能在组长后台用自己的 QQ 号登录。</div>');
+  } else if (state.tab === 'exams') {
+    const fl = state.filterLeader || '', fp = state.filterPass || '';
+    let rows = state.exams.slice();
+    if (fl) rows = rows.filter(x => String(x.leader_id) === fl);
+    if (fp === 'p') rows = rows.filter(x => x.passed);
+    if (fp === 'f') rows = rows.filter(x => !x.passed);
+    body = '<div class="row" style="gap:8px;margin-bottom:12px">'
+      + '<select id="flSel" data-act="filterExam" style="flex:1"><option value="">全部组长</option>' + state.leaders.map(l => '<option value="' + l.id + '"' + (fl === String(l.id) ? ' selected' : '') + '>' + esc(l.name) + '</option>').join('') + '</select>'
+      + '<select id="fpSel" data-act="filterExam" style="flex:1"><option value="">全部结果</option><option value="p"' + (fp === 'p' ? ' selected' : '') + '>通过</option><option value="f"' + (fp === 'f' ? ' selected' : '') + '>不合格</option></select></div>'
+      + '<div class="note" style="margin-bottom:12px">共 ' + rows.length + ' 条记录 · 全团 ' + state.exams.length + ' 条</div>'
+      + (rows.length ? rows.map(r =>
+          '<div class="listcard"><div class="lrow"><div><div class="lname">' + esc(r.member_name) + ' <span class="tag ' + (r.passed ? 'm' : 'r') + '">' + (r.passed ? '通过' : '不合格') + '</span></div>'
+          + '<div class="lmeta">' + esc(r.leader_name) + ' · ' + esc(r.paper) + ' · 错 ' + r.wrong + ' 题 · QQ ' + esc(r.member_qq) + '</div>'
+          + '<div class="lmeta">操作：' + esc(r.grader) + ' · ' + fmtTime(r.created_at) + '</div></div></div></div>'
+        ).join('') : '<div class="note">还没有考核记录。</div>');
+  } else if (state.tab === 'bank') {
+    const banks = ['A','B','C','J'];
+    body = '<div class="seg" style="margin-bottom:12px">' + banks.map(b => '<button class="' + (state.qbank === b ? 'on' : '') + '" data-act="qbankSel" data-bank="' + b + '">' + esc(BANK_NAME[b].replace('（','').replace('）','')) + '</button>').join('') + '</div>'
+      + '<div class="note" style="margin-bottom:12px">共 ' + state.questions.length + ' 题 · 改完立即生效，后面出的卷子就用新题。</div>'
+      + '<button class="btn ghost" data-act="qAdd" style="margin-bottom:12px">在末尾新增一道题</button>'
+      + state.questions.map((q, idx) => {
+          if (Number(state.editing) === Number(q.id)) {
+            return '<div class="qcard"><div class="qhead"><span class="qnum">第 ' + (idx+1) + ' 题 · 编辑中</span></div>'
+              + '<div class="field"><label class="lb">题型</label><select id="eqType">'
+              + ['single','judge','fill','short'].map(t => '<option value="' + t + '"' + (q.qtype === t ? ' selected' : '') + '>' + TYPE_NAME[t] + '</option>').join('') + '</select></div>'
+              + '<div class="field"><label class="lb">题干</label><textarea id="eqStem" style="min-height:80px">' + esc(q.stem) + '</textarea></div>'
+              + '<div class="field"><label class="lb">选项（单选题用，一行一个，判断题不用填）</label><textarea id="eqOpts" style="min-height:80px">' + esc((q.options || []).join('\n')) + '</textarea></div>'
+              + '<div class="field"><label class="lb">标准答案（单选填字母 A/B/C；判断填 对/错）</label><textarea id="eqAns" style="min-height:70px">' + esc(q.answer) + '</textarea></div>'
+              + '<div class="field"><label class="lb">填空数量（填空题用）</label><input id="eqBlanks" inputmode="numeric" value="' + (q.blanks || 0) + '"></div>'
+              + '<div class="row" style="gap:8px"><button class="btn" data-act="qSave" data-id="' + q.id + '">保存</button><button class="btn ghost" data-act="qCancel">取消</button></div></div>';
+          }
+          return '<div class="qcard"><div class="qhead"><span class="qnum">第 ' + (idx+1) + ' 题</span><span class="tag ' + (q.qtype === 'short' ? 'a' : '') + '">' + TYPE_NAME[q.qtype] + '</span></div>'
+            + '<div class="qstem">' + esc(q.stem) + '</div>'
+            + '<div class="ansbox">' + esc(q.answer) + '</div>'
+            + '<div class="qa" style="justify-content:flex-end;margin-top:11px"><button class="mini" data-act="qEdit" data-id="' + q.id + '">改这道</button>'
+            + '<button class="mini" style="border-color:#F0C9D1;color:var(--rose)" data-act="qDel" data-id="' + q.id + '">删除</button></div></div>';
+        }).join('');
+  } else {
+    body = '<div class="listcard"><div class="lb" style="margin:0 0 10px">修改团长密码</div>'
+      + '<div class="field"><label class="lb">新密码</label><input id="newPwd" placeholder="输入新密码"></div>'
+      + '<div class="err" id="err"></div>'
+      + '<button class="btn" data-act="savePwd">保存新密码</button></div>'
+      + '<div class="listcard"><div class="lname">当前状态</div>'
+      + '<div class="lmeta">' + (isShared() ? '<span class="dot"></span>已同步 · 多台手机数据互通' : '本机模式：数据只存在这台手机上') + '</div>'
+      + '<button class="btn ghost" data-act="setup" style="margin-top:12px">同步设置</button>'
+      + '<button class="btn ghost" data-act="logoutOwner" style="margin-top:8px">退出团长后台</button></div>';
+  }
+  return brandRow()
+    + '<div class="row" style="margin-bottom:12px"><h1 style="font-size:20px;margin:0">团长后台</h1><div class="chip ok" style="margin-left:auto" data-act="logoutOwner">退出</div></div>'
+    + '<div class="seg" style="margin-bottom:14px">' + tabs.map(t => '<button class="' + (state.tab === t[0] ? 'on' : '') + '" data-act="otab" data-tab="' + t[0] + '">' + t[1] + '</button>').join('') + '</div>'
+    + body;
+};
+
+/* ---- 组长后台 ---- */
+VIEWS.leader = function () {
+  const a = state.actor || {};
+  const tabs = [['assist','小助理'],['exams','本组成绩']];
+  let body = '';
+  if (state.tab === 'assist') {
+    body = '<div class="listcard"><div class="lb" style="margin:0 0 10px">添加小助理</div>'
+      + '<div class="row" style="gap:8px"><input id="naName" placeholder="小助理名字" style="flex:1"><input id="naQq" inputmode="numeric" placeholder="小助理 QQ" style="flex:1"></div>'
+      + '<div class="err" id="err"></div>'
+      + '<button class="btn" data-act="addAssist" style="margin-top:11px">添加小助理</button></div>'
+      + (state.assistants.length ? state.assistants.map(x =>
+          '<div class="listcard"><div class="lrow"><div><div class="lname">' + esc(x.name) + '</div><div class="lmeta">QQ ' + esc(x.qq) + '</div></div>'
+          + '<div class="qa"><button class="mini" style="border-color:#F0C9D1;color:var(--rose)" data-act="delAssist" data-id="' + x.id + '">删除</button></div></div></div>'
+        ).join('') : '<div class="note">还没有小助理。添加后，小助理用自己的 QQ 号就能进小助理后台。</div>');
+  } else {
+    body = (state.exams.length ? state.exams.map(r =>
+        '<div class="listcard"><div class="lrow"><div><div class="lname">' + esc(r.member_name) + ' <span class="tag ' + (r.passed ? 'm' : 'r') + '">' + (r.passed ? '通过' : '不合格') + '</span></div>'
+        + '<div class="lmeta">' + esc(r.paper) + ' · 错 ' + r.wrong + ' 题 · QQ ' + esc(r.member_qq) + '</div>'
+        + '<div class="lmeta">操作：' + esc(r.grader) + ' · ' + fmtTime(r.created_at) + '</div></div></div></div>'
+      ).join('') : '<div class="note">本组还没有考核记录。</div>')
+      + '<div class="row" style="gap:8px;margin-top:12px"><button class="btn ghost sm" data-act="openExport" style="flex:1">导出成绩码</button><button class="btn ghost sm" data-act="openImport" style="flex:1">导入成绩码</button></div>';
+  }
+  return brandRow()
+    + '<div class="row" style="margin-bottom:4px"><h1 style="font-size:20px;margin:0">' + esc(a.name || a.leaderName) + ' 的组长后台</h1><div class="chip" style="margin-left:auto" data-act="logout">退出</div></div>'
+    + '<p style="color:var(--muted);font-size:12.5px;margin:0 0 14px">所属组：' + esc(a.leaderName) + ' · QQ ' + esc(a.qq) + '</p>'
+    + '<div class="row" style="gap:8px;margin-bottom:14px"><button class="btn sm" data-act="startNew" data-type="newbie" style="flex:1">发起新人考核</button><button class="btn sm" data-act="startNew" data-type="jump" style="flex:1">发起跳培考核</button></div>'
+    + '<div class="seg" style="margin-bottom:14px">' + tabs.map(t => '<button class="' + (state.tab === t[0] ? 'on' : '') + '" data-act="ltab" data-tab="' + t[0] + '">' + t[1] + '</button>').join('') + '</div>'
+    + body;
+};
+
+/* ---- 小助理后台 ---- */
+VIEWS.assistant = function () {
+  const a = state.actor || {};
+  return brandRow()
+    + '<div class="row" style="margin-bottom:4px"><h1 style="font-size:20px;margin:0">' + esc(a.name) + ' 的小助理后台</h1><div class="chip" style="margin-left:auto" data-act="logout">退出</div></div>'
+    + '<p style="color:var(--muted);font-size:12.5px;margin:0 0 14px">所属组：' + esc(a.leaderName) + ' · QQ ' + esc(a.qq) + '</p>'
+    + '<div class="row" style="gap:8px;margin-bottom:14px"><button class="btn sm" data-act="startNew" data-type="newbie" style="flex:1">发起新人考核</button><button class="btn sm" data-act="startNew" data-type="jump" style="flex:1">发起跳培考核</button></div>'
+    + '<div class="h2">本组考核记录</div>'
+    + (state.exams.length ? state.exams.map(r =>
+        '<div class="listcard"><div class="lrow"><div><div class="lname">' + esc(r.member_name) + ' <span class="tag ' + (r.passed ? 'm' : 'r') + '">' + (r.passed ? '通过' : '不合格') + '</span></div>'
+        + '<div class="lmeta">' + esc(r.paper) + ' · 错 ' + r.wrong + ' 题 · QQ ' + esc(r.member_qq) + '</div>'
+        + '<div class="lmeta">操作：' + esc(r.grader) + ' · ' + fmtTime(r.created_at) + '</div></div></div></div>'
+      ).join('') : '<div class="note">本组还没有考核记录。</div>')
+    + '<div class="row" style="gap:8px;margin-top:12px"><button class="btn ghost sm" data-act="openExport" style="flex:1">导出成绩码发组长</button><button class="btn ghost sm" data-act="openImport" style="flex:1">导入成绩码</button></div>';
+};
+/* ================= 业务动作 ================= */
+function fail(msg) {
+  const e = el('err');
+  if (e) { e.textContent = msg; }
+  else { window.alert(msg); }
+}
+
+async function loadTab() {
+  if (state.view === 'owner') {
+    if (state.tab === 'leaders' || state.tab === 'exams') state.leaders = await store.listLeaders();
+    if (state.tab === 'leaders') state.assistants = await store.listAssistants();
+    if (state.tab === 'exams') state.exams = await store.listExams();
+    if (state.tab === 'bank') state.questions = await store.listQuestions(state.qbank);
+  } else if (state.view === 'leader') {
+    const a = state.actor;
+    if (state.tab === 'assist') state.assistants = await store.listAssistants(a.leaderId);
+    else state.exams = await store.listExams(a.leaderId);
+  } else if (state.view === 'assistant') {
+    state.exams = await store.listExams(state.actor.leaderId);
+  }
+}
+
+async function buildExam(type) {
+  let qs = [], paper = '';
+  if (type === 'jump') {
+    const all = await store.listQuestions('J');
+    const n = Math.min(6 + Math.floor(Math.random() * 3), all.length);
+    const picked = all.slice().sort(() => Math.random() - 0.5).slice(0, n);
+    qs = picked.map(q => ({ id:q.id, stem:q.stem, qtype:q.qtype, options:q.options || [], answer:q.answer, blanks:Number(q.blanks) || 0 }));
+    paper = '跳培随机卷 ' + qs.length + ' 题';
+  } else {
+    const banks = ['A','B','C'];
+    const b = banks[Math.floor(Math.random() * 3)];
+    const all = await store.listQuestions(b);
+    qs = all.map(q => ({ id:q.id, stem:q.stem, qtype:q.qtype, options:q.options || [], answer:q.answer, blanks:Number(q.blanks) || 0 }));
+    paper = BANK_NAME[b];
+  }
+  if (!qs.length) throw new Error('这个题库还是空的，请先到团长后台的题库管理里补题');
+  return {
+    type: type, paper: paper, questions: qs,
+    answers: qs.map(q => q.qtype === 'fill' ? new Array(Math.max(1, q.blanks)).fill('') : ''),
+    judged: qs.map(() => null)
+  };
+}
+
+function autoJudge(q, ans) {
+  if (q.qtype === 'single') return String(ans || '').trim() === String(q.answer || '').trim();
+  if (q.qtype === 'judge') {
+    let a = String(ans || '').trim();
+    if (a === '√') a = '对';
+    if (a === '×') a = '错';
+    return a === String(q.answer || '').trim();
+  }
+  return null;
+}
+
+async function handle(act, el2) {
+  switch (act) {
+    /* --- 导航 --- */
+    case 'home': state.view = 'home'; state.actor = null; render(); return;
+    case 'backHome': state.view = 'home'; state.actor = null; state.result = null; render(); return;
+    case 'setup': state.view = 'setup'; render(); return;
+    case 'loginOwner': state.view = 'loginOwner'; render(); return;
+    case 'loginLeader': state.view = 'loginLeader'; render(); return;
+    case 'loginAssistant': state.view = 'loginAssistant'; render(); return;
+
+    /* --- 同步设置 --- */
+    case 'copySql': {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        try { await navigator.clipboard.writeText(CREATE_SQL); window.alert('已复制，去 Supabase 的 SQL Editor 粘进去点 Run'); return; } catch (e) {}
+      }
+      window.alert(CREATE_SQL);
+      return;
+    }
+    case 'saveCfg': {
+      const u = val('cfgUrl'), k = val('cfgKey');
+      if (!u || !k) { fail('两个都要填'); return; }
+      saveCfg(u, k);
+      try {
+        await readCloudDoc();
+        await store.initSeed();
+        window.alert('同步成功，多台手机现在能看到同一份成绩');
+        state.view = 'home'; render();
+      } catch (e) {
+        useLocal();
+        window.alert('连不上：' + e.message + '\n\n检查 URL、key 有没有复制全，以及那句建表 SQL 有没有跑成功。');
+        state.view = 'setup'; render();
+      }
+      return;
+    }
+    case 'useLocal': {
+      useLocal();
+      window.alert('已切回本机模式：成绩只存在这台手机上');
+      state.view = 'home'; render(); return;
+    }
+
+    /* --- 成绩码 --- */
+    case 'openExport': {
+      const a = state.actor;
+      const list = await store.listExams(a && a.leaderId ? a.leaderId : null);
+      if (!list.length) { window.alert('还没有成绩可以导出'); return; }
+      state.shareData = enc(JSON.stringify(list));
+      state.shareMode = 'export'; state.view = 'share'; render(); return;
+    }
+    case 'openImport':
+      state.shareMode = 'import'; state.view = 'share'; render(); return;
+    case 'copyShare': {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        try { await navigator.clipboard.writeText(state.shareData || ''); window.alert('已复制，直接发给组长'); return; } catch (e) {}
+      }
+      window.alert('长按文本框全选复制即可');
+      return;
+    }
+    case 'doImport': {
+      const raw = val('importBox').replace(/\s+/g, '');
+      if (!raw) { fail('先粘贴成绩码'); return; }
+      let arr;
+      try { arr = JSON.parse(dec(raw)); } catch (e) { fail('这串不是有效的成绩码，检查有没有复制全'); return; }
+      if (!Array.isArray(arr)) { fail('成绩码格式不对'); return; }
+      const n = await store.importExams(arr);
+      window.alert('导入完成，新增 ' + n + " 条成绩");
+      state.view = 'home'; state.actor = null; render(); return;
+    }
+
+    /* --- 登录 --- */
+    case 'doOwnerLogin': {
+      const pwd = val('pwdInput');
+      if (!pwd) { fail('请输入密码'); return; }
+      const s = await store.getSettings();
+      const real = s.owner_pwd || '123456';
+      if (pwd !== String(real)) { fail('密码不对'); return; }
+      state.actor = { role:'owner', name:'团长' };
+      state.view = 'owner'; state.tab = 'leaders';
+      await loadTab(); render(); return;
+    }
+    case 'doLeaderLogin': {
+      const qq = val('qqInput');
+      if (!qq) { fail('请输入 QQ 号'); return; }
+      const list = await store.listLeaders();
+      const hit = list.find(x => String(x.qq).trim() === qq);
+      if (!hit) { fail('这个 QQ 号还没被团长录入，请联系团长'); return; }
+      state.actor = { role:'leader', leaderId: hit.id, leaderName: hit.name, name: hit.name, qq: String(hit.qq) };
+      state.view = 'leader'; state.tab = 'assist';
+      await loadTab(); render(); return;
+    }
+    case 'doAssistLogin': {
+      const qq = val('qqInput');
+      if (!qq) { fail('请输入 QQ 号'); return; }
+      const all = await store.listAssistants();
+      const hit = all.find(x => String(x.qq).trim() === qq);
+      if (!hit) { fail('这个 QQ 号还没被组长录入，请联系你的组长'); return; }
+      state.actor = { role:'assistant', leaderId: hit.leader_id, leaderName: hit.leader_name, name: hit.name, qq: String(hit.qq) };
+      state.view = 'assistant';
+      await loadTab(); render(); return;
+    }
+    case 'logout': case 'logoutOwner':
+      state.actor = null; state.view = 'home'; render(); return;
+
+    /* --- 考核入口 --- */
+    case 'examEntry': state.pendingType = el2.dataset.type; state.view = 'verify'; render(); return;
+    case 'doVerify': {
+      const qq = val('qqInput');
+      if (!qq) { fail('请输入 QQ 号'); return; }
+      const ls = await store.listLeaders();
+      const leader = ls.find(x => String(x.qq).trim() === qq);
+      if (leader) {
+        state.actor = { role:'leader', leaderId: leader.id, leaderName: leader.name, name: leader.name, qq: String(leader.qq) };
+      } else {
+        const as = await store.listAssistants();
+        const hit = as.find(x => String(x.qq).trim() === qq);
+        if (!hit) { fail('这个 QQ 号没有被录入，组长找团长、小助理找组长'); return; }
+        state.actor = { role:'assistant', leaderId: hit.leader_id, leaderName: hit.leader_name, name: hit.name, qq: String(hit.qq) };
+      }
+      state.examType = state.pendingType;
+      state.view = 'examPrep'; render(); return;
+    }
+    case 'startNew': state.examType = el2.dataset.type; state.view = 'examPrep'; render(); return;
+    case 'startExam': {
+      const n = val('mName'), q = val('mQq');
+      if (!n) { fail('写一下组员名字'); return; }
+      if (!q) { fail('写一下组员 QQ 号'); return; }
+      const ex = await buildExam(state.examType);
+      ex.memberName = n; ex.memberQq = q; ex.graderName = state.actor.name;
+      state.exam = ex; state.view = 'exam'; render(); return;
+    }
+
+    /* --- 答题 --- */
+    case 'pick': {
+      const i = Number(el2.dataset.i), k = el2.dataset.k;
+      if (!state.exam) return;
+      state.exam.answers[i] = k;
+      const card = el2.closest('.qcard');
+      if (card) card.querySelectorAll('.opt').forEach(o => o.classList.remove('on'));
+      el2.classList.add('on');
+      updateProg();
+      return;
+    }
+    case 'submitExam': {
+      const ex = state.exam; if (!ex) return;
+      let blank = 0;
+      ex.questions.forEach((q, i) => {
+        if (q.qtype === 'single' || q.qtype === 'judge') { if (!ex.answers[i]) blank++; }
+        else if (q.qtype === 'fill') { const arr = ex.answers[i] || []; if (!arr.some(x => String(x).trim())) blank++; }
+        else { if (!String(ex.answers[i] || '').trim()) blank++; }
+      });
+      if (blank > 0 && !window.confirm('还有 ' + blank + ' 道题没作答，确定提交吗？（没答的会按错处理，但要你手工点）')) return;
+      ex.judged = ex.questions.map((q, i) => autoJudge(q, ex.answers[i]));
+      state.view = 'grade'; render(); return;
+    }
+    case 'judge': {
+      const i = Number(el2.dataset.i);
+      if (!state.exam) return;
+      state.exam.judged[i] = el2.dataset.v === '1';
+      render(); return;
+    }
+    case 'submitGrade': {
+      const ex = state.exam; if (!ex) return;
+      const left = ex.judged.filter(v => v === null || v === undefined).length;
+      if (left > 0) { fail('还有 ' + left + ' 道题没判，判完才能保存成绩'); return; }
+      const wrong = ex.judged.filter(v => v === false).length;
+      const passed = wrong <= 2;
+      const a = state.actor;
+      const rec = {
+        leader_id: a.leaderId, leader_name: a.leaderName,
+        assistant_name: a.name,
+        member_name: ex.memberName, member_qq: ex.memberQq,
+        exam_type: ex.type, paper: ex.paper, total: ex.questions.length,
+        wrong: wrong, passed: passed,
+        grader: (a.role === 'leader' ? '组长·' : '小助理·') + a.name,
+        detail: ex.questions.map((q, i) => ({
+          stem: q.stem, qtype: q.qtype, answer: q.answer,
+          member: fmtAnswer(q, ex.answers[i]),
+          ok: ex.judged[i] === true
+        }))
+      };
+      try { await store.addExam(rec); } catch (e) { fail('成绩没存上：' + e.message); return; }
+      state.result = Object.assign({ created_at: new Date().toISOString() }, rec);
+      state.exam = null;
+      state.view = 'result'; render(); return;
+    }
+
+    /* --- 后台切换 --- */
+    case 'otab': state.tab = el2.dataset.tab; await loadTab(); render(); return;
+    case 'ltab': state.tab = el2.dataset.tab; await loadTab(); render(); return;
+
+    /* --- 团长：组长 --- */
+    case 'addLeader': {
+      const name = val('nlName'), qq = val('nlQq');
+      if (!name || !qq) { fail('名字和 QQ 都要填'); return; }
+      try { await store.addLeader(name, qq); }
+      catch (e) {
+        const m = String(e.message || '');
+        fail((m.indexOf('duplicate') > -1 || m.indexOf('23505') > -1 || m.indexOf('已经录入') > -1) ? '这个 QQ 号已经录入过了' : m);
+        return;
+      }
+      state.leaders = await store.listLeaders();
+      state.assistants = await store.listAssistants();
+      render(); return;
+    }
+    case 'delLeader': {
+      if (!window.confirm('删除后这个组长和他名下的小助理都进不去系统了，确定？')) return;
+      try { await store.delLeader(el2.dataset.id); } catch (e) { fail(e.message); return; }
+      state.leaders = await store.listLeaders();
+      state.assistants = await store.listAssistants();
+      state.exams = await store.listExams();
+      render(); return;
+    }
+
+    /* --- 组长：小助理 --- */
+    case 'addAssist': {
+      const name = val('naName'), qq = val('naQq');
+      if (!name || !qq) { fail('名字和 QQ 都要填'); return; }
+      try { await store.addAssistant(state.actor.leaderId, state.actor.leaderName, name, qq); }
+      catch (e) {
+        const m = String(e.message || '');
+        fail((m.indexOf('duplicate') > -1 || m.indexOf('23505') > -1 || m.indexOf('已经录入') > -1) ? '这个 QQ 号已经录入过了' : m);
+        return;
+      }
+      state.assistants = await store.listAssistants(state.actor.leaderId);
+      render(); return;
+    }
+    case 'delAssist': {
+      if (!window.confirm('确定删除这个小助理？')) return;
+      try { await store.delAssistant(el2.dataset.id); } catch (e) { fail(e.message); return; }
+      state.assistants = await store.listAssistants(state.actor.leaderId);
+      render(); return;
+    }
+
+    /* --- 题库管理 --- */
+    case 'qbankSel': state.qbank = el2.dataset.bank; state.editing = null; state.questions = await store.listQuestions(state.qbank); render(); return;
+    case 'qEdit': state.editing = el2.dataset.id; render(); return;
+    case 'qCancel': state.editing = null; render(); return;
+    case 'qDel': {
+      if (!window.confirm('删除这一道题？')) return;
+      try { await store.delQuestion(el2.dataset.id); } catch (e) { fail(e.message); return; }
+      state.questions = await store.listQuestions(state.qbank); render(); return;
+    }
+    case 'qSave': {
+      const id = el2.dataset.id;
+      const qtype = val('eqType'), stem = val('eqStem'), answer = val('eqAns');
+      if (!stem || !answer) { fail('题干和标准答案不能空'); return; }
+      const opts = val('eqOpts').split('\n').map(s => s.trim()).filter(Boolean);
+      const blanks = Number(val('eqBlanks')) || 0;
+      try {
+        await store.updateQuestion(id, { qtype: qtype, stem: stem, options: opts, answer: answer, blanks: blanks });
+      } catch (e) { fail(e.message); return; }
+      state.editing = null;
+      state.questions = await store.listQuestions(state.qbank); render(); return;
+    }
+    case 'qAdd': {
+      const maxSort = state.questions.reduce((m, q) => Math.max(m, Number(q.sort) || 0), 0);
+      const item = { bank: state.qbank, sort: maxSort + 1, qtype:'short', stem:'新题目（点“改这道”填写内容）', options:[], answer:'（待填写答案）', blanks:0 };
+      try { await store.addQuestion(item); } catch (e) { fail(e.message); return; }
+      state.questions = await store.listQuestions(state.qbank); render(); return;
+    }
+
+    /* --- 团长：密码 --- */
+    case 'savePwd': {
+      const p = val('newPwd');
+      if (!p || p.length < 4) { fail('密码至少 4 位'); return; }
+      try { await store.setSetting('owner_pwd', p); } catch (e) { fail(e.message); return; }
+      fail(''); window.alert('团长密码已更新'); render(); return;
+    }
+    case 'filterExam': {
+      state.filterLeader = el('flSel') ? el('flSel').value : '';
+      state.filterPass = el('fpSel') ? el('fpSel').value : '';
+      render(); return;
+    }
+  }
+}
+
+/* ================= 事件绑定 ================= */
+document.addEventListener('click', async function (e) {
+  const t = e.target.closest('[data-act]');
+  if (!t) return;
+  const act = t.dataset.act;
+  if (act === 'filterExam') return;
+  if (t.tagName === 'SELECT') return;
+  try { await handle(act, t); }
+  catch (err) {
+    const e2 = el('err');
+    if (e2) e2.textContent = err && err.message ? err.message : '出错了';
+    else window.alert(err && err.message ? err.message : '出错了');
+  }
+});
+
+document.addEventListener('change', function (e) {
+  const t = e.target.closest('[data-act="filterExam"]');
+  if (t) {
+    state.filterLeader = el('flSel') ? el('flSel').value : '';
+    state.filterPass = el('fpSel') ? el('fpSel').value : '';
+    render();
+  }
+});
+
+document.addEventListener('input', function (e) {
+  const t = e.target;
+  if (!state.exam) return;
+  if (t.getAttribute('data-ans-i') !== null) {
+    const i = Number(t.getAttribute('data-ans-i'));
+    const jAttr = t.getAttribute('data-ans-j');
+    if (jAttr !== null) {
+      const j = Number(jAttr);
+      const arr = Array.isArray(state.exam.answers[i]) ? state.exam.answers[i] : [];
+      arr[j] = t.value; state.exam.answers[i] = arr;
+    } else {
+      state.exam.answers[i] = t.value;
+    }
+    updateProg();
+  }
+});
+
+/* ================= 启动 ================= */
+render();
+store.initSeed().catch(function () {});
+</script>
+</body>
+</html>
