@@ -225,7 +225,12 @@ async function sb(path, opts) {
     'Authorization': 'Bearer ' + cfg.key,
     'Content-Type': 'application/json'
   }, opts.headers || {});
-  const res = await fetch(cfg.url + '/rest/v1/' + path, Object.assign({}, opts, { headers }));
+  let res;
+  try {
+    res = await fetch(cfg.url + '/rest/v1/' + path, Object.assign({}, opts, { headers }));
+  } catch (e) {
+    throw new Error('连不上云库：网络被挡或太慢。切一下流量/Wi-Fi 再点一次，或先用「本机模式」。');
+  }
   if (!res.ok) {
     let t = '';
     try { t = await res.text(); } catch(e) {}
